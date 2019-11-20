@@ -4,6 +4,8 @@
 
 body {
     font-size: 10px;
+    width: 100vw;
+    height: 100vh;
 }
 
 header {
@@ -17,7 +19,7 @@ header {
 }
 
 table {
-    margin: 20% auto;
+    margin: 5vh auto;
     border-color: grey;
 }
 
