@@ -1,0 +1,39 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-size: 10px;
+}
+
+header {
+    margin-left: 40%;
+}
+
+.emoji {
+    cursor: pointer;
+    font-size: 4rem;
+    margin: auto;
+}
+
+table {
+    margin: 20% auto;
+    border-color: grey;
+}
+
+.cell {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    font-size: 1.5rem;
+    border: groove;
+    background-color: darkslategray;
+}
+
+.opened {
+    background-color: rgba(172, 165, 165, 0.884);
+}
+
+.mine.opened {
+    background-color: red;
+}
