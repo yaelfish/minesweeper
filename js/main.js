@@ -11,9 +11,10 @@ var EXPERT = { size: 12, mines: 30 };
 
 var gLevel;
 var gBoard = [];
-var gSecPassedInterval;
-var gSecPassed = 0;
 
+var gSecPassedInterval;
+var gSecondsPassed = 0;
+var gFirstClick = 0;
 // Elements
 var elEmoji = document.querySelector('.emoji');
 var elTimer = document.querySelector('.timer');
@@ -22,16 +23,34 @@ var gGame = {
     isOn: false,
     openedCount: 0,
     flaggedCount: 0,
-    secsPassed: gSecPassed
+    secsPassed: gSecondsPassed
 };
 
 function initGame() {
     gGame.isOn = true;
+    gFirstClick = 0;
     elEmoji.innerText = '🙂';
-    gSecPassedInterval = setInterval(countSeconds, 1000);
+    elTimer.innerText = 0;
     gLevel = BEGINNER;
     gBoard = buildBoard(gLevel);  
     renderBoard();
+}
+
+function resetTimer() {
+    if (!gSecPassedInterval){
+        gSecPassedInterval = setInterval(countSeconds, 1000);
+    }
+    else {
+        gSecPassedInterval = null;
+        gSecPassedInterval = setInterval(countSeconds, 1000);
+    }
+}
+
+function countSeconds(){
+    gSecondsPassed++;
+    elTimer.innerText = gSecondsPassed;
+    console.log(gSecondsPassed);
+    
 }
 
 function buildBoard(level) {
@@ -86,9 +105,11 @@ function renderBoard() {
     elGameContainer.innerHTML = strHTML;
 }
 
-
-
-function cellClicked(elCell, cellPosI, cellPosJ) {
+function cellClicked(elCell, cellPosI, cellPosJ) { 
+    if(gFirstClick === 0){
+        resetTimer();
+        gFirstClick++;
+    }
     var cell = gBoard[cellPosI][cellPosJ];
     if (!cell.isOpened) {    
         cell.isOpened = true;
@@ -107,10 +128,11 @@ function cellClicked(elCell, cellPosI, cellPosJ) {
 }
 
 function gameOver() {
-    console.log('game over you stepped on a mine');
-    
+    console.log('game over you stepped on a mine');    
     elEmoji.innerText = '😵';
+    
     clearInterval(gSecPassedInterval);
+    gSecondsPassed = 0;
     gSecPassedInterval = null;
     
     revealAllMines();
