@@ -3,13 +3,30 @@
 }
 
 body {
-    font-size: 10px;
+    font-size: 11px;
     width: 100vw;
     height: 100vh;
+    background-image: url('../images/minesweeper-background.jpg');
+    font-family: Helvetica, sans-serif;
+}
+
+.pageContainer {
+    width: 50vw;
+    margin: 5vh auto;
+    text-align: center;
 }
 
 header {
-    margin-left: 40%;
+    background: rgba(100, 100, 100, 0.98);
+    color: navajowhite;
+    font-size: 1.1rem;
+}
+
+.levelBtn {
+    background: rgba(100, 100, 100, 0.98);
+    color: navajowhite;
+    font-size: 1rem;
+    cursor: pointer;
 }
 
 .emoji {
@@ -20,7 +37,8 @@ header {
 
 table {
     margin: 5vh auto;
-    border-color: grey;
+    border-color: silver;
+    background: rgba(100, 100, 100, 0.98);
 }
 
 .cell {
@@ -29,13 +47,37 @@ table {
     text-align: center;
     font-size: 1.5rem;
     border: groove;
-    background-color: darkslategray;
+    background-color: rgb(134, 136, 138);
+    cursor: pointer;
+}
+
+.cell:hover {
+    background-color: rgba(248, 231, 153, 0.94);
+}
+
+.one {
+    color: blue;
+    font-weight: bold;
+}
+
+.two {
+    color: red;
+    font-weight: bold;
+}
+
+.three {
+    color: green;
+    font-weight: bold;
 }
 
 .opened {
-    background-color: rgba(172, 165, 165, 0.884);
+    background-color: rgba(248, 231, 153, 0.94);
 }
 
 .mine.opened {
-    background-color: red;
+    border-color: red;
+}
+
+.disabled {
+    pointer-events: none;
 }

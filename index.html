@@ -9,15 +9,18 @@
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body onload="initGame()">
-    <header>
-        <h1>Minesweeper</h1>
-     
-        <p class="emoji" onclick="initGame()">🙂</p>
-        <p class="timerContainer">Timer: <span class="timer">0</span></p>
-    </header>
-    
-    <div class="gameContainer"></div>
+    <div class="pageContainer">
+        <header>
+            <h1>Minesweeper</h1>
+            <p class="emoji" onclick="initGame()">🙂</p>
+            <p class="timerContainer">Timer: <span class="timer">0</span></p>
+        </header>
 
+        <button class="levelBtn" onclick=beginner()>Beginner</button>
+        <button class="levelBtn" onclick=medium()>Medium</button>
+        <button class="levelBtn" onclick=expert()>Expert</button>
+        <div class="gameContainer"></div>
+    </div>
     <script src="./js/utils.js"></script>
     <script src="./js/main.js"></script>
 </body>

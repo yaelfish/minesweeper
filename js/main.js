@@ -11,11 +11,12 @@ var EXPERT = { size: 12, mines: 30 };
 
 var gLevel;
 var gBoard = [];
+var gMinesLocations = [];
 
 var gSecPassedInterval;
 var gSecondsPassed = 0;
 var gFirstClick = 0;
-// Elements
+
 var elEmoji = document.querySelector('.emoji');
 var elTimer = document.querySelector('.timer');
 
@@ -32,6 +33,7 @@ function initGame() {
     elEmoji.innerText = '🙂';
     elTimer.innerText = 0;
     gLevel = BEGINNER;
+    gMinesLocations = [];
     gBoard = buildBoard(gLevel);  
     renderBoard();
 }
@@ -49,13 +51,11 @@ function resetTimer() {
 function countSeconds(){
     gSecondsPassed++;
     elTimer.innerText = gSecondsPassed;
-    console.log(gSecondsPassed);
-    
 }
 
 function buildBoard(level) {
     var board = [];
-    var size = level.size; // gLevel: size 4, mines 2
+    var size = level.size; 
     var mines = level.mines;
 
     for (var i = 0; i < size; i++) {
@@ -69,7 +69,6 @@ function buildBoard(level) {
                 isFlagged: false,
                 value: EMPTY
             };
-
             board[i][j] = cell;
         }
     }
@@ -86,17 +85,18 @@ function renderBoard() {
         strHTML += '<tr>\n'
         for (var j = 0; j < gBoard[i].length; j++) {
             var cell = gBoard[i][j];
-
+            
             var className = (cell.isOpened) ? 'opened ' : '';
             className += (cell.isWithMine) ? 'mine ' : '';
-            var gameOver = (cell.isOpened && cell.isWithMine) ?  MINE : '';
+            className += (cell.minesAroundCount === 1) ? 'one ' : '';
+            className += (cell.minesAroundCount === 2) ? 'two ' : '';
+            className += (cell.minesAroundCount === 3) ? 'three ' : '';
+
 
             strHTML += `\t<td data-id="cell-${i}-${j}" class="cell ${className}" 
-                                                        oncontextmenu="toggleFlagged(event, ${i}, ${j})" 
-                                                        onclick="cellClicked(this, ${i}, ${j})">
-                        <span class="flag-${i}-${j}" hidden>${FLAG}</span>
-                        <span class="span-${i}-${j}" hidden>${MINE}</span>
-                        ${gameOver}</td>\n`
+                        oncontextmenu="toggleFlagged(event, ${i}, ${j})" 
+                        onclick="cellClicked(this, ${i}, ${j})">${(cell.isOpened && !cell.isWithMine) ? cell.minesAroundCount : (cell.isOpened && cell.isWithMine) ? MINE : ''}
+                        <span class="flag-${i}-${j}" hidden>${FLAG}</span></td>\n`
         }
         strHTML += '</tr>\n'
     }
@@ -117,9 +117,8 @@ function cellClicked(elCell, cellPosI, cellPosJ) {
         elCell.classList.add('opened');
         
         if (cell.isWithMine) {
-            elCell.innerText = MINE;
-            
-            gameOver();
+            revealAllMines();
+            gameOver(0);
         } else {
             elCell.innerText = (cell.minesAroundCount !== 0) ? cell.minesAroundCount : '';
         }
@@ -127,23 +126,17 @@ function cellClicked(elCell, cellPosI, cellPosJ) {
     return;
 }
 
-function gameOver() {
-    console.log('game over you stepped on a mine');    
-    elEmoji.innerText = '😵';
-    
+function gameOver(win) { 
+    if (!win) elEmoji.innerText = '😵';
+    else elEmoji.innerText = '😎';
     clearInterval(gSecPassedInterval);
     gSecondsPassed = 0;
     gSecPassedInterval = null;
-    
-    revealAllMines();
-    
 }
 
 function toggleFlagged(event, cellPosI, cellPosJ) {
     event.preventDefault();
-
     var elFlagSpan = document.querySelector(`.flag-${cellPosI}-${cellPosJ}`);
-
     var cell = gBoard[cellPosI][cellPosJ];
     if (!cell.isOpened) {
         if (cell.isFlagged) {
@@ -154,6 +147,7 @@ function toggleFlagged(event, cellPosI, cellPosJ) {
             cell.isFlagged = true;
             gGame.flaggedCount++;
             elFlagSpan.hidden = false;
+            checkIfGameOver();
         }
     }
     else if (cell.isOpened) return;
@@ -165,48 +159,62 @@ function plantMines(gLevel, board) {
         findEmptyCellAndPutMine(gLevel, board);
         minesCounter++;
     }
-    console.log(minesCounter);
+    renderBoard();
     return minesCounter;
 }
 
 function findEmptyCellAndPutMine(gLevel, board) {
-    var randomRowLoc = getRandomNum(gLevel.size);
-    var randomColLoc = getRandomNum(gLevel.size);
-    var randomCell = board[randomRowLoc][randomColLoc];
+    var i = getRandomNum(gLevel.size);
+    var j = getRandomNum(gLevel.size);
+    var randomCell = board[i][j];
     
     if (randomCell.isWithMine === false) {
         randomCell.isWithMine = true;
         randomCell.value = MINE;
-        
-        // var elMine = document.querySelector(`span-${randomRowLoc}-${randomColLoc}`);
-        // elMine.innerText = MINE;
+        gMinesLocations.push({ i, j});
     }
 }
 
-// function findAllMines() {
-//     // change in board data -
-//     var minedCells = [];
-//     for (var i = 0; i < gBoard.length; i++) {
-//         for (var j = 0; j < gBoard[i].length; j++) {
-//             var cell = gBoard[i][j];
-//             if (cell.isWithMine){
-//                 cell.isOpened = true;
-//                 cell.value = MINE;
-//                 minedCells.push(cell);
-//                 gBoard[i][j] = MINE;
-//             }
-//         }
-//     }
-//     return minedCells;
-// }
-
 function revealAllMines() {
-    var mines = document.querySelectorAll('.mine');
-    for (var i = 0; i < mines.length; i++) {
-        var mine = mines[i];
-    
-        console.log(mine);
-        mine = MINE;
-        
+    for (var i = 0; i < gMinesLocations.length; i++) {
+        var mineLocation = gMinesLocations[i];
+        gBoard[mineLocation.i][mineLocation.j].value = MINE;
+        gBoard[mineLocation.i][mineLocation.j].isOpened = true;
     }
+    renderBoard();
+}
+
+function checkIfGameOver() {
+    var minesAmount = gMinesLocations.length;
+    var cellsAmount = gLevel.size * gLevel.size;
+    var emptyAmount = gGame.openedCount;
+  
+    if ((cellsAmount - minesAmount) === emptyAmount){
+        gameOver(1);
+    }
+}
+
+function restart() {
+    gGame.isOn = true;
+    gFirstClick = 0;
+    elEmoji.innerText = '🙂';
+    elTimer.innerText = 0;
+    gMinesLocations = [];
+    gBoard = buildBoard(gLevel);
+    renderBoard();
+}
+
+function beginner() {
+    gLevel = BEGINNER;
+    restart()
+}
+
+function medium() {
+    gLevel = MEDIUM;
+    restart()
+}
+
+function expert() {
+    gLevel = EXPERT;
+    restart()
 }
