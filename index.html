@@ -12,14 +12,17 @@
     <div class="pageContainer">
         <header>
             <h1>Minesweeper</h1>
-            <p class="emoji" onclick="initGame()">🙂</p>
-            <p class="timerContainer">Timer: <span class="timer">0</span></p>
+            <p class="emoji" onclick="restart()">🙂</p>
+            <p class="timerContainer">Timer: <span class="timer">0</span>   |    HighScore: <span id="highscore"></span></p>
         </header>
-
+        <button class="hintBtn hintBtn1" onclick="clickedHint(this)">💡</button>
+        <button class="hintBtn hintBtn2" onclick="clickedHint(this)">💡</button>
+        <button class="hintBtn hintBtn3" onclick="clickedHint(this)">💡</button>
         <button class="levelBtn" onclick=beginner()>Beginner</button>
         <button class="levelBtn" onclick=medium()>Medium</button>
         <button class="levelBtn" onclick=expert()>Expert</button>
         <div class="gameContainer"></div>
+        <button class="safeBtn" onclick="clickedSafeBtn(this)">Safe Button</button>
     </div>
     <script src="./js/utils.js"></script>
     <script src="./js/main.js"></script>

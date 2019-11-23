@@ -11,8 +11,7 @@ body {
 }
 
 .pageContainer {
-    width: 50vw;
-    margin: 5vh auto;
+    margin: 3vh auto;
     text-align: center;
 }
 
@@ -31,19 +30,19 @@ header {
 
 .emoji {
     cursor: pointer;
-    font-size: 4rem;
+    font-size: 3.6rem;
     margin: auto;
 }
 
 table {
-    margin: 5vh auto;
+    margin: 3vh auto;
     border-color: silver;
     background: rgba(100, 100, 100, 0.98);
 }
 
 .cell {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     text-align: center;
     font-size: 1.5rem;
     border: groove;
@@ -51,8 +50,8 @@ table {
     cursor: pointer;
 }
 
-.cell:hover {
-    background-color: rgba(248, 231, 153, 0.94);
+.cell img {
+    width: 10px;
 }
 
 .one {
@@ -61,12 +60,22 @@ table {
 }
 
 .two {
-    color: red;
+    color: green;
     font-weight: bold;
 }
 
 .three {
-    color: green;
+    color: red;
+    font-weight: bold;
+}
+
+.four {
+    color: rgb(37, 7, 119);
+    font-weight: bold;
+}
+
+.five {
+    color: rgb(100, 25, 2);
     font-weight: bold;
 }
 
@@ -80,4 +89,17 @@ table {
 
 .disabled {
     pointer-events: none;
+}
+
+.hint {
+    background-color: blueviolet;
+}
+
+.safeBtn {
+    background: rgba(100, 100, 100, 0.98);
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 10px;
+    margin: auto;
 }
